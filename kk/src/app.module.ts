@@ -4,13 +4,24 @@ import { join } from 'path';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import * as joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === "dev" ? ".env.dev" : ".test.env",
-      ignoreEnvFile: process.env.NODE_ENV === "prod"
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      validationSchema: joi.object({
+        NODE_ENV: joi
+          .string()
+          .valid('dev', 'prod')
+          .required(),
+        DB_HOST: joi.string().required(),
+        DB_PORT: joi.string().required(),
+        DB_PASSWORD: joi.string().required(),
+        DB_USERNAME: joi.string().required(),
+      }),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -25,8 +36,7 @@ import { ConfigModule } from '@nestjs/config';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
-    RestaurantsModule
-
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
