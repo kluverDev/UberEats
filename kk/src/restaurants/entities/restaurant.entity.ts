@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsBoolean, IsString, Length } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 //we are using this file for both typeorm entities and graphql
@@ -20,12 +20,13 @@ export class Restaurant {
   @Length(5)
   name: string;
 
-  @Field(type => Boolean)
-  @Column()
+  @Field(type => Boolean,  {/* defaultValue: true, */ nullable: true} ) //for our schema. the default value is true
+  @Column({default: true}) //if this is not provided, use true as the default for our db
+  @IsOptional() //this is for our validator. this value is optional but must be a Boolean WHEN PROVIDED
   @IsBoolean()
   isVegan: boolean;
 
-  @Field(type => String)
+  @Field(type => String, {defaultValue: 'london'})
   @Column()
   @IsString()
   address: string;
