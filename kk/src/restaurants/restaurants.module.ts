@@ -5,6 +5,7 @@ import { RestaurantResolver } from './restaurants.resolver';
 import { RestaurantService } from './restaurants.service';
 
 @Module({
+  //ANYTHING ADDED HERE CAN BE INJECTED INTO OUR CLASSES
   imports:[TypeOrmModule.forFeature([Restaurant])],//we need to inject the typeorm repository for restaurant
   providers: [RestaurantResolver, RestaurantService],
 })

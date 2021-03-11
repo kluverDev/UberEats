@@ -34,7 +34,7 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
-      entities: [Restaurant]
+      entities: [Restaurant]//RESTAURANT IS GOING TO THE DB.TYPORM IS AWARE OF THE ENTITY 
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
