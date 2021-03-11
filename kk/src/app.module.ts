@@ -5,6 +5,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import * as joi from 'joi';
         DB_PORT: joi.string().required(),
         DB_PASSWORD: joi.string().required(),
         DB_USERNAME: joi.string().required(),
+        DB_NAME: joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -30,8 +32,9 @@ import * as joi from 'joi';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
+      entities: [Restaurant]
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
