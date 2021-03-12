@@ -1,3 +1,4 @@
+import { UpdateRestaurantDto } from './dtos/update-restaurant-dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,5 +18,11 @@ export class RestaurantService {
       const newRestaurant = this.restaurants.create(createRestaurantDto); //this create a js object
       return this.restaurants.save(newRestaurant); //this save/send the js obj to db
   }
+  updateRestaurant({id, data}:UpdateRestaurantDto)  {
+    return  this.restaurants.update(id, {...data})
+  }
 
 }
+
+//.update doesnt check if the entity exists in the db.the first arg in the update fxn is the
+//serch query param while the 2nd arg is the new data.
