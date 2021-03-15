@@ -10,7 +10,6 @@ import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsEmail, IsEnum } from 'class-validator';
 
-
 enum UserRole {
   Client,
   Owner,
@@ -37,13 +36,23 @@ export class User extends CoreEntity {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @BeforeInsert()//encrypting pssword before it is saved on the db
+  @BeforeInsert() //encrypting pssword before it is saved on the db
   async hashPassword(): Promise<void> {
     try {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException()
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async checkPassword(aPassword: string): Promise<boolean> {
+    try {
+      const ok = await bcrypt.compare(aPassword, this.password);
+      return ok;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }
